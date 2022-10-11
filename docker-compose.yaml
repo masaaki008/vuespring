@@ -1,0 +1,15 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    restart: always
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testuser
+      - POSTGRES_DB=invdb
+      - DATABASE_HOST=localhost
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data

@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5436/invdb
+    username: postgres
+    password: testuser
+  flyway:
+    url: jdbc:postgresql://localhost:5436/invdb
+    user: postgres
+    password: testuser
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  reactive:
+    session:
+      timeout: 1m
+
+logging:
+  level:
+    com:
+      tsone: DEBUG
+    org:
+      springframework:
+        web: INFO
