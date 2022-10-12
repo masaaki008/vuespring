@@ -1,4 +1,4 @@
-package com.tsone.vuespring.config;
+package com.tsone.vuespring.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

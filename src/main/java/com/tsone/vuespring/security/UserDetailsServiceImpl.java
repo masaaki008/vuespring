@@ -9,6 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * ログイン処理
+ *
+ * @author
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -22,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String mailAddress) throws UsernameNotFoundException {
         try {
             MUserDto user = this.userRepository.findByMailAddress(mailAddress);
-            return new User(user.getMailAddress(), user.getPassword(), new ArrayList<>());
+            return new LoginUser(user);
         } catch (Exception e) {
             throw new UsernameNotFoundException("メールアドレスもしくはパスワードが違います");
         }

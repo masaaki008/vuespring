@@ -2,9 +2,10 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login";
+import NotFound from "../views/NotFound";
 import axios from "axios";
-import multiguard from "vue-router-multiguard";
 import store from "../store/index.js";
+import multiguard from "vue-router-multiguard";
 
 Vue.use(VueRouter);
 
@@ -37,6 +38,13 @@ const routes = [
         path: "/login",
         name: "Login",
         component: Login,
+    },
+
+    // 必ず最後にする
+    {
+        path: "*",
+        name: "NotFound",
+        component: NotFound,
     },
 ];
 

@@ -15,4 +15,20 @@ public class MUserDto implements Serializable {
     private String userName;
 
     private int permission;
+
+    /**
+     * json形式にした文字列を返却
+     *
+     * @return
+     */
+    public String toJsonString() {
+        return
+            "{" +
+                "\"mailAddress\":" + "\"" + this.mailAddress + "\"," +
+                "\"password\":" + "\"" + this.password + "\"," +
+                "\"userName\":" + "\"" + this.userName + "\"," +
+                "\"permission\":" + this.permission +
+                "}";
+    }
+
 }

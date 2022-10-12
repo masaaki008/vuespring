@@ -10,13 +10,28 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * ログインフィルター
+ *
+ * @author
+ */
 @Slf4j
 public class LoginFilter extends OncePerRequestFilter {
 
+    /**
+     * JWTチェックフィルター
+     *
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
@@ -24,7 +39,7 @@ public class LoginFilter extends OncePerRequestFilter {
         String header = request.getHeader("X-AUTH-TOKEN");
         log.debug("X-AUTH-TOKEN: {}", header);
 
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (StringUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -13,6 +13,7 @@
     "bootstrap": "^5.2.2",
     "bootstrap-vue": "^2.22.0",
     "core-js": "^3.8.3",
+    "google-fonts-webpack-plugin": "^0.4.4",
     "jquery": "^3.6.1",
     "vue": "^2.6.12",
     "vue-router": "^3.5.1",

@@ -16,6 +16,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * spring security コンフィグ
+ *
+ * @author
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -32,6 +37,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        // cors設定
         http.cors().configurationSource(this.corsConfigurationSource());
 
         http.authorizeHttpRequests()
@@ -39,14 +46,17 @@ public class SecurityConfig {
             .antMatchers("/api/login").permitAll()
             .antMatchers("/api/**").authenticated();
 
+        // ログアウト処理
         http.logout()
                 .logoutUrl("/api/logout")
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK));
 
+        // 未認証時のレスポンスをデフォルトから変更
         http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 
+        // フィルターの追加
         http.addFilter(new JwtAuthenticationFilter(this.authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))));
         http.addFilterAfter(new LoginFilter(), JwtAuthenticationFilter.class);
 
@@ -54,6 +64,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * cors設定
+     *
+     * @return corsConfigurationSource
+     */
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);

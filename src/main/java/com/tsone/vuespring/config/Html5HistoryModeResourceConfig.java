@@ -8,6 +8,11 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
+/**
+ * 対応しないURLの場合、固定ページを返す
+ *
+ * @author
+ */
 @Configuration
 public class Html5HistoryModeResourceConfig implements WebMvcConfigurer {
 

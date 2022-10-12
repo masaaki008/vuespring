@@ -20,21 +20,30 @@ repositories {
 }
 
 dependencies {
+
+    // spring
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
+    // JWT
     implementation 'com.auth0:java-jwt:4.0.0'
 
+    // DB・マイグレーションツール
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
     implementation 'org.postgresql:postgresql:42.5.0'
     implementation 'org.flywaydb:flyway-core:9.4.0'
 
+    // その他
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // テストツール
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
