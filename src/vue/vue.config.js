@@ -11,4 +11,10 @@ module.exports = defineConfig({
             },
         },
     },
+    pages: {
+        index: {
+            entry: "src/main.js",
+            title: "在庫引当システム",
+        },
+    },
 });
