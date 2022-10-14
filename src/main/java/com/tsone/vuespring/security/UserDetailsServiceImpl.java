@@ -2,8 +2,6 @@ package com.tsone.vuespring.security;
 
 import com.tsone.vuespring.dto.MUserDto;
 import com.tsone.vuespring.repository.MUserRepository;
-import java.util.ArrayList;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

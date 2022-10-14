@@ -2,6 +2,7 @@ package com.tsone.vuespring.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +24,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class LoginFilter extends OncePerRequestFilter {
 
+    private JwtProperties jwtProperties;
+
+    public LoginFilter(JwtProperties jwtProperties) {
+        super();
+        this.jwtProperties = jwtProperties;
+    }
+
     /**
      * JWTチェックフィルター
      *
@@ -36,18 +44,25 @@ public class LoginFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        String header = request.getHeader("X-AUTH-TOKEN");
-        log.debug("X-AUTH-TOKEN: {}", header);
+        try {
+            String header = request.getHeader("X-AUTH-TOKEN");
+            log.debug("X-AUTH-TOKEN: {}", header);
 
-        if (StringUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
+            if (StringUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            String token = header.substring(7);
+            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(this.jwtProperties.getKey())).build().verify(token);
+            String username = decodedJWT.getClaim("username").asString();
+
+            SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>()));
             filterChain.doFilter(request, response);
-            return;
+        } catch (JWTVerificationException e) {
+            log.warn("JWT Tokenチェックエラー:");
+            log.warn("{}", e.getMessage());
+            filterChain.doFilter(request, response);
         }
-        String token = header.substring(7);
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256("secret")).build().verify(token);
-        String username = decodedJWT.getClaim("username").asString();
-
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>()));
-        filterChain.doFilter(request, response);
     }
 }

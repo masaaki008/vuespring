@@ -25,3 +25,9 @@ logging:
     org:
       springframework:
         web: INFO
+
+pn:
+  jwt:
+    timeout: 60
+    issuer: com.tsone
+    key: secret

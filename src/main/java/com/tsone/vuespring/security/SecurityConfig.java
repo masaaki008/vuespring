@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,6 +25,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private JwtProperties jwtProperties;
+
+    public SecurityConfig(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -57,10 +64,15 @@ public class SecurityConfig {
         http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 
         // フィルターの追加
-        http.addFilter(new JwtAuthenticationFilter(this.authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))));
-        http.addFilterAfter(new LoginFilter(), JwtAuthenticationFilter.class);
+        http.addFilter(new JwtAuthenticationFilter(
+            this.authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
+            this.jwtProperties));
+        http.addFilterAfter(new LoginFilter(this.jwtProperties), JwtAuthenticationFilter.class);
 
         http.csrf().ignoringAntMatchers("/api/**");
+
+        // セッションを利用しない
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
 

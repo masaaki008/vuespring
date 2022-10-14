@@ -7,6 +7,8 @@ import com.tsone.vuespring.dto.MUserDto;
 import com.tsone.vuespring.form.UserForm;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,13 +30,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private AuthenticationManager authenticationManager;
 
+    private JwtProperties jwtProperties;
+
     /**
      * フィルター
      *
      * @param authenticationManager
      */
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(
+        AuthenticationManager authenticationManager, JwtProperties jwtProperties) {
+
         this.authenticationManager = authenticationManager;
+        this.jwtProperties = jwtProperties;
 
         // ログインパスの設定
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
@@ -46,11 +53,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             LoginUser loginUser = (LoginUser) ex.getPrincipal();
             MUserDto user = loginUser.getUser();
 
+            // タイムアウトの設定
+            Date timeout = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(timeout);
+            calendar.add(Calendar.MINUTE, this.jwtProperties.getTimeout());
+            timeout = calendar.getTime();
+
             // トークン生成処理
             String token = JWT.create()
-                .withIssuer("com.tsone")
+                .withIssuer(this.jwtProperties.getIssuer())
+                .withExpiresAt(timeout)
                 .withClaim("username", ex.getName())
-                .sign(Algorithm.HMAC256("secret"));
+                .sign(Algorithm.HMAC256(this.jwtProperties.getKey()));
 
             // ヘッダーにX-AUTH-TOKENをセット
             res.setHeader("X-AUTH-TOKEN", token);
