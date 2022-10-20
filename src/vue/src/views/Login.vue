@@ -77,7 +77,20 @@ export default {
                     this.$router.push("/");
                 })
                 .catch((e) => {
-                    console.log(e);
+                    const status = e.response.status;
+                    if (status === 401) {
+                        this.$emit(
+                            "showMessage",
+                            "メールアドレスもしくはパスワードが違います",
+                            "danger"
+                        );
+                    } else {
+                        this.$emit(
+                            "showMessage",
+                            "ネットワークエラー\n管理者にお問い合わせください",
+                            "danger"
+                        );
+                    }
                 });
         },
         test() {

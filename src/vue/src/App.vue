@@ -10,10 +10,27 @@
         </b-navbar>
 
         <b-container fluid>
-            <router-view />
+            <Message ref="message"></Message>
+            <router-view @showMessage="showMessage" />
         </b-container>
     </div>
 </template>
+
+<script>
+import Message from "@/components/Message";
+
+export default {
+    name: "App",
+
+    components: { Message },
+
+    methods: {
+        showMessage(message, variant) {
+            this.$refs.message.showMessage(message, variant);
+        },
+    },
+};
+</script>
 
 <style>
 #app {
