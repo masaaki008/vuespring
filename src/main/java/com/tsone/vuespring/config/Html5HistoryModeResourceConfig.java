@@ -20,6 +20,9 @@ public class Html5HistoryModeResourceConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        // API時は静的ファイルにアクセスしない
+        registry.addResourceHandler("/api/**");
         registry.addResourceHandler("/**")
             .addResourceLocations(this.resourceProperties.getStaticLocations())
             .resourceChain(this.resourceProperties.getChain().isCache())
