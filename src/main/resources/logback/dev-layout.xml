@@ -35,7 +35,11 @@
         </filter>
     </appender>
 
-    <root level="DEBUG">
+    <logger name="com.tsone.vuespring" additivity="false" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="app_log"/>
         <appender-ref ref="error_log"/>

@@ -20,7 +20,7 @@ const authGuard = (to, from, next) => {
             },
         })
         .then((res) => {
-            console.log(res);
+            store.dispatch("saveToken", res.headers["x-auth-token"]);
             next();
         })
         .catch(() => {

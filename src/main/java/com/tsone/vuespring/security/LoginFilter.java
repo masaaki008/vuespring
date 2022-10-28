@@ -56,12 +56,15 @@ public class LoginFilter extends OncePerRequestFilter {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(this.jwtProperties.getKey())).build().verify(token);
             String username = decodedJWT.getClaim("username").asString();
 
+            // JWTトークンタイムアウト更新
+            String reToken = this.jwtProperties.createJwtToken(username);
+            response.setHeader("X-AUTH-TOKEN", reToken);
+
             SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>()));
             filterChain.doFilter(request, response);
         } catch (JWTVerificationException e) {
-            log.warn("JWT Tokenチェックエラー:");
-            log.warn("{}", e.getMessage());
+            log.warn("JWT Tokenチェックエラー : {}", e.getMessage());
             filterChain.doFilter(request, response);
         }
     }
