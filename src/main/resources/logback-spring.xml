@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty name="LOG_DIR" source="pn.log.file"/>
+    <property name="CONSOLE_FORMAT"
+        value="[%highlight(%-5level)] %d{yyyy-MM-dd HH:mm:ss.SSS} %cyan(%-75logger{16}) : %m%n"/>
+    <property name="FORMAT" value="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %-75logger{16} : %m%n"/>
+
+    <!--  ローカルログ  -->
+    <springProfile name="dev">
+        <include resource="logback/dev-layout.xml"/>
+    </springProfile>
+
+    <!--  検証環境ログ  -->
+    <springProfile name="st">
+        <include resource="logback/st-layout.xml"/>
+    </springProfile>
+
+    <!--  本番環境ログ  -->
+    <springProfile name="prod">
+        <include resource="logback/prod-layout.xml"/>
+    </springProfile>
+</configuration>

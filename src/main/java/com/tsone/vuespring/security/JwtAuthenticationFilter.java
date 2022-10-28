@@ -53,19 +53,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             LoginUser loginUser = (LoginUser) ex.getPrincipal();
             MUserDto user = loginUser.getUser();
 
-            // タイムアウトの設定
-            Date timeout = new Date();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(timeout);
-            calendar.add(Calendar.MINUTE, this.jwtProperties.getTimeout());
-            timeout = calendar.getTime();
-
             // トークン生成処理
-            String token = JWT.create()
-                .withIssuer(this.jwtProperties.getIssuer())
-                .withExpiresAt(timeout)
-                .withClaim("username", ex.getName())
-                .sign(Algorithm.HMAC256(this.jwtProperties.getKey()));
+            String token = this.jwtProperties.createJwtToken(ex.getName());
 
             // ヘッダーにX-AUTH-TOKENをセット
             res.setHeader("X-AUTH-TOKEN", token);
